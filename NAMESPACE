@@ -2,8 +2,8 @@
 
 export(frequency_list)
 export(get_corpus)
+export(list_corpora)
 export(ngrams)
-export(q_collocations)
 export(q_distribution)
 export(q_frequency_breakdown)
 export(query_corpus)

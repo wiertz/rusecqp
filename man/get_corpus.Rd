@@ -7,14 +7,13 @@
 get_corpus(corpus_name)
 }
 \arguments{
-\item{corpus_name}{string of CWB corpus name.}
+\item{corpus_name}{character of CWB corpus name (will be converted to uppercase).}
 }
 \value{
 list with class attribute "rusecqp_corpus" containing  corpus information.
 }
 \description{
 \code{get_corpus} retrieves corpus information from an existing CWB corpus.
-\code{corpus_name} is converted to uppercase.
 }
 \examples{
 \dontrun{get_corpus("MY_CORPUS")}

@@ -34,4 +34,5 @@ into account.
   \dontrun{q_collocations(my_query_result, context = c(2, 0))}
   \dontrun{q_collocations(my_query_result, context = "s")}
 
+
 }

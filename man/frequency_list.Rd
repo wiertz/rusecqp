@@ -4,24 +4,20 @@
 \alias{frequency_list}
 \title{Calculate token frequency list}
 \usage{
-frequency_list(corpus, pattr = "word", sattr = NULL, sattr_values = NULL)
+frequency_list(corpus, pattr = "word")
 }
 \arguments{
-\item{corpus}{corpus created with \code{get_corpus}.}
+\item{corpus}{corpus created with \code{get_corpus} or corpus subset created
+with \code{subset_corpus}.}
 
 \item{pattr}{string specifying positional attribute (e.g. word or lemma).}
-
-\item{sattr}{character specifying s-attribute.}
-
-\item{sattr_values}{vector of s-attribute values.}
 }
 \value{
 data.table with tokens, absolute, and relative frequencies.
 }
 \description{
 \code{frequency_list} calculates token (e.g. word or lemma) frequency list
-for the specified corpus. If a structural attribute and attribute values are
-provided, frequencies are restricted to the subset of the corpus.
+for the specified corpus or corpus subset.
 }
 \examples{
 \dontrun{frequency_list, pattr = "lemma", sattr = "text_year", sattr_values = c(2015, 2016)}

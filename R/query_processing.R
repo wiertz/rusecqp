@@ -25,7 +25,7 @@ query_corpus <- function(corpus, cqp_query, sattr = NULL, sattr_values = NULL) {
     print(paste0("performing query ", q, "on corpus ", corpus$name))
     rcqp::cqi_query(corpus$name, "RusecqpQuery", q)
     cqp_result <- rcqp::cqi_dump_subcorpus(paste0(corpus$name, ":RusecqpQuery"))
-    cqp_result <- .tk_range2pos(cqp_result[,1], cqp_result[,2])
+    cqp_result <- tk_range2pos(cqp_result[,1], cqp_result[,2])
     rcqp::cqi_drop_subcorpus(paste0(corpus$name, ":RusecqpQuery"))
     cqp_result
   })
@@ -49,8 +49,8 @@ query_corpus <- function(corpus, cqp_query, sattr = NULL, sattr_values = NULL) {
 #' @export
 q_frequency_breakdown  <- function(query_result, pattr = "word") {
   stopifnot(inherits(query_result, "query_result"))
-  token_ids <- .tk_pos2id(query_result$match, pattr, query_result$corpus)
-  strings <- .tk_id2str(token_ids, pattr, query_result$corpus)
+  token_ids <- tk_pos2id(query_result$match, pattr, query_result$corpus)
+  strings <- tk_id2str(token_ids, pattr, query_result$corpus)
   strings <- lapply(strings, stringr::str_c, sep = " ")
   strings_table <- data.table(QUERY_RESULT = unlist(strings))
   strings_table <- strings_table[, .(N = .N), by = QUERY_RESULT]
@@ -76,9 +76,9 @@ q_distribution <- function(query_result, sattr) {
   stopifnot(inherits(query_result, "query_result"))
   stopifnot(sattr %in% query_result$corpus$sattribs)
 
-  sattr_categories <- .sattr_categories(sattr, query_result$corpus)
+  sattr_categories <- sattr_categories(sattr, query_result$corpus)
   result_categories <- lapply(query_result$match, function(x) {
-    .tk_pos2sattr(x[1], query_result$corpus, sattr)
+    tk_pos2sattr(x[1], query_result$corpus, sattr)
   })
   distrib <- data.table(CATEGORY = unlist(result_categories))
   distrib <- distrib[, .(N = .N), by = CATEGORY][order(CATEGORY)]
@@ -96,7 +96,7 @@ q_distribution <- function(query_result, sattr) {
 #' longer than one token, the context is build around the entire length of the
 #' query match. E.g. if \code{context = 3}, three tokens before the first token
 #' of the match and three tokens after the last token of the match are taken
-#' into account.
+#' into account. Note that the tokens of match itself are contained in the result.
 #'
 #' @param query_result list of class query result returned from
 #'   \code{query_corpus}.
@@ -112,21 +112,14 @@ q_distribution <- function(query_result, sattr) {
 #'   \dontrun{q_collocations(my_query_result, context = c(2, 0))}
 #'   \dontrun{q_collocations(my_query_result, context = "s")}
 #'
-#' @export
-q_collocations <- function(query_result, context, pattr = "word", include_match = F) {
+#'
+q_collocations <- function(query_result, context, pattr = "word") {
   if(is.numeric(context)) {
-    if(length(context) > 1) {
-      left_context <- context[1]
-      right_context <- context[2]
-    } else {
-      left_context <- context
-      right_context <- context
-    }
+    left_context <- context[1]
+    right_context <- ifelse(length(context) == 2, context[2], context[1])
     positions <- unlist(
       lapply(query_result$match, function(x) {
-        pos <- (x[1] - left_context):(x[length(x)] + right_context)
-        if(!include_match) pos <- subset(pos, !(pos %in% x))
-        pos
+      (x[1] - left_context):(x[length(x)] + right_context)
       })
     )
   } else if(context %in% query_result$corpus$sattribs) {
@@ -134,12 +127,10 @@ q_collocations <- function(query_result, context, pattr = "word", include_match 
     match_positions <- unlist(query_result$match)
     left_boundaries <- rcqp::cqi_cpos2lbound(sattrib_string, match_positions)
     right_boundaries <- rcqp::cqi_cpos2rbound(sattrib_string, match_positions)
-    positions <- unique(
-      unlist(Map(seq, left_boundaries, right_boundaries))
-    )
+    positions <- unlist(Map(seq, left_boundaries, right_boundaries))
   } else {
     stop("Invalid context. Provide numeric window size or s_attribute name.")
   }
-  collocations <- .tk_pos2freqdist(positions, query_result$corpus, pattr)
-  collocations[]
+  collocations <- tk_pos2freq(positions, query_result$corpus, pattr)
+  collocations[, !"R"]
 }

@@ -4,18 +4,17 @@
 \alias{ngrams}
 \title{Calcualte ngrams}
 \usage{
-ngrams(corpus, ngram_length, min_count, pattr = "word", ignore_punct = T)
+ngrams(corpus, ngram_length, pattr = "word", ignore_punct = T)
 }
 \arguments{
 \item{corpus}{corpus created with \code{get_corpus}.}
 
 \item{ngram_length}{numeric. Length of ngrams.}
 
-\item{min_count}{numeric. Minimum frequency of ngrams to return.}
-
 \item{pattr}{character. Positional attribute to use for ngram calculation.}
 
-\item{ignore_punct}{logical. If TRUE, punctuation is ignored in ngram calculation.}
+\item{ignore_punct}{logical. If TRUE, punctuation is ignored in ngram
+calculation.}
 }
 \value{
 data.table with ngrams and frequencies.
@@ -23,8 +22,9 @@ data.table with ngrams and frequencies.
 \description{
 \code{ngrams} calculates ngrams for a corpus or subcorpus. Ngram calculation
 uses a lot of memory and may fail for large corpora or subcorpora or causing
-the system to hang. On a machine with 8 GB of available memory, corpora of
-about 50 Mio token can be processed.
+the system to hang. For computational efficiency, results are not cleaned and
+may contain some artifacts (i.e. ngrams with less than the specified token
+count).
 }
 \examples{
 \dontrun{trigrams <- ngrams(my_corpus, 3, min_count = 10)}
