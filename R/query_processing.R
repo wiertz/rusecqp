@@ -127,7 +127,7 @@ q_collocations <- function(query_result, context, pattr = "word") {
     match_positions <- unlist(query_result$match)
     left_boundaries <- rcqp::cqi_cpos2lbound(sattrib_string, match_positions)
     right_boundaries <- rcqp::cqi_cpos2rbound(sattrib_string, match_positions)
-    positions <- unlist(Map(seq, left_boundaries, right_boundaries))
+    positions <- unique(unlist(Map(seq, left_boundaries, right_boundaries)))
   } else {
     stop("Invalid context. Provide numeric window size or s_attribute name.")
   }
