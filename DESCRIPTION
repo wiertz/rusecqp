@@ -1,0 +1,22 @@
+Package: rusecqp
+Type: Package
+Title: Corpus linguistic analysis for Corpus Workbench corpora
+Version: 0.0.9000
+Authors@R: person("Wiertz", "Thilo", email = "twi@posteo.de",
+  role = c("aut", "cre"))
+Description: A package of corpus analysis functions to analyze corpora
+    indexed in the Corpus Workbench. Uses rcqp cqi_ set of functions, but
+    provides high abstract functions to process query results, perform
+    collocation and keyword analysis, calculate ngrams, etc.
+License: CC BY-SA 4.0
+Encoding: UTF-8
+LazyData: true
+Imports:
+    stringr
+Depends:
+    rcqp,
+    data.table
+RoxygenNote: 6.0.1
+Suggests: testthat
+URL: http://github.com/retide/rusecqp
+BugReports: http://github.com/retide/rusecqp/issues
