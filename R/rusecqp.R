@@ -1,4 +1,4 @@
-#' rusecqp: A package for performing corpus linguistic analysis on Corpus
+#' rusecqp: A package for corpus linguistic analysis with Corpus
 #' Workbench corpora
 #'
 #' A package of corpus analysis functions to analyze corpora indexed in the
