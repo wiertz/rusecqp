@@ -57,14 +57,14 @@ subset_corpus <- function(cqp_corpus, sattr, sattr_values) {
   if(!is.null(sattr_values)) {
     corpus_sattr <- corpus_sattr[CATEGORY %in% sattr_values]
   }
-  positions <- lapply(corpus_sattr$ID, function(x) {
-    from_to_pos <- rcqp::cqi_struc2cpos(sattr_string, x)
+  fromto_pos <- lapply(corpus_sattr$ID, function(x) {
+    pos <- rcqp::cqi_struc2cpos(sattr_string, x)
   })
   subcorpus <- list()
   class(subcorpus) <- append(class(subcorpus), "rusecqp_subcorpus")
   subcorpus$name <- cqp_corpus$name
-  subcorpus$cpos <- positions
-  subcorpus$token_count <- sum(vapply(positions, function(p) {
+  subcorpus$cpos <- fromto_pos
+  subcorpus$token_count <- sum(vapply(fromto_pos, function(p) {
     p[2] - p[1] + 1
   }, 0))
   subcorpus
