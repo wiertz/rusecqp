@@ -40,11 +40,9 @@ sattr_regions <- function(sattr, cqp_corpus) {
 
 # Utility functions for tokens
 tk_range2pos <- function(begin_pos, end_pos) {
-  ## Takes two vectors with begin/end positions of equal length and returns all positions
   stopifnot(length(begin_pos) == length(end_pos))
   ranges <- Map(seq, begin_pos, end_pos)
 }
-
 tk_pos2id <- function(tk_positions, pattr, cqp_corpus) {
   ## Takes any kind of list containing token positions as integers and recursively
   ## replaces all integers by token ids based on corpus pattr
@@ -53,7 +51,6 @@ tk_pos2id <- function(tk_positions, pattr, cqp_corpus) {
                 how = "replace",
                 classes = "integer")
 }
-
 tk_id2str <- function(tk_ids, pattr, cqp_corpus) {
   ## Takes any kind of list containing token ids as integers and recursively
   ## replaces all integers by token string based on corpus pattr
