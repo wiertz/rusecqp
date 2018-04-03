@@ -16,23 +16,25 @@ right. character: structural attribute (e.g. "s").}
 
 \item{pattr}{character specifying positional attribute (e.g. "word").}
 
-\item{include_match}{logical indicating wether the matched tokens themselves
-should be considered in the analysis.}
+\item{exclude_match}{logical indicating whether the matched tokens themselves
+should be excluded from the analysis.}
 }
 \value{
 data.table of collocators and frequencies.
 }
 \description{
-\code{q_collocations} returns collocators of a query match. If query match is
-longer than one token, the context is build around the entire length of the
-query match. E.g. if \code{context = 3}, three tokens before the first token
-of the match and three tokens after the last token of the match are taken
-into account.
+\code{q_collocations} performs collocation analysis of a query match. If
+query match is longer than one token the context is build around the entire
+length of the query match. E.g. if \code{context = 3}, three tokens before
+the first token of the match and three tokens after the last token of the
+match are taken into account. In case two or more numeric collocation windows
+overlap, tokens are counted multiple times. However, if more than one match
+fall within a structural region, only unique structural regions are
+considered.
 }
 \examples{
 \dontrun{q_collocations(my_query_result, context = 3)}
   \dontrun{q_collocations(my_query_result, context = c(2, 0))}
-  \dontrun{q_collocations(my_query_result, context = "s")}
-
+  \dontrun{q_collocations(my_query_result, context = "s", pattr = "lemma", exclude_match = F)}
 
 }
