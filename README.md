@@ -10,7 +10,7 @@ The package requires a working installation of the [IMS Corpus Workbench](http:/
 To install rusecqp, install the devtools package and than rcqp. This will also install the dependency packages data.table and stringr as required:
 ````
 install.packages("devtools")
-devtools::install_github("retide/rusecqp")
+devtools::install_github("wiertz/rusecqp")
 `````
 Load the package with
 `````
