@@ -19,15 +19,15 @@ cp_get_pattribs <- function(cqp_corpus) {
 }
 
 # Utility functions for structural attributes
-sattr_categories <- function(sattr, corpus) {
-  regions <- sattr_regions(sattr, corpus)
+sattr_categories <- function(sattr, cqp_corpus) {
+  regions <- sattr_regions(sattr, cqp_corpus)
   regions <- regions[, sum(N), by = CATEGORY][order(CATEGORY)]
   setnames(regions, "V1", "N")
   regions
 }
 
-sattr_regions <- function(sattr, corpus) {
-  sattr_string <- paste0(corpus$name, ".", sattr)
+sattr_regions <- function(sattr, cqp_corpus) {
+  sattr_string <- paste0(cqp_corpus$name, ".", sattr)
   n_regions <- rcqp::cqi_attribute_size(sattr_string)
   region_ids <- 0:(n_regions - 1)
   region_value <- as.character(rcqp::cqi_struc2str(sattr_string, region_ids))

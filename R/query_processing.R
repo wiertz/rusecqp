@@ -13,8 +13,8 @@
 #' @examples \dontrun{query_corpus(my_corpus, '[word = "crisis"]')}
 #'
 #' @export
-query_corpus <- function(corpus, cqp_query, sattr = NULL, sattr_values = NULL) {
-  stopifnot(inherits(corpus, "rusecqp_corpus"))
+query_corpus <- function(cqp_corpus, cqp_query, sattr = NULL, sattr_values = NULL) {
+  stopifnot(inherits(cqp_corpus, "rusecqp_corpus"))
   if(is.character(sattr) && !is.null(sattr_values)) {
     cqp_query <- paste0(cqp_query,
                                " :: match.", sattr, "='",
@@ -22,15 +22,15 @@ query_corpus <- function(corpus, cqp_query, sattr = NULL, sattr_values = NULL) {
                                "'")
   }
   result <- lapply(cqp_query, function(q) {
-    print(paste0("performing query ", q, "on corpus ", corpus$name))
-    rcqp::cqi_query(corpus$name, "RusecqpQuery", q)
-    cqp_result <- rcqp::cqi_dump_subcorpus(paste0(corpus$name, ":RusecqpQuery"))
+    print(paste0("performing query ", q, "on corpus ", cqp_corpus$name))
+    rcqp::cqi_query(cqp_corpus$name, "RusecqpQuery", q)
+    cqp_result <- rcqp::cqi_dump_subcorpus(paste0(cqp_corpus$name, ":RusecqpQuery"))
     cqp_result <- tk_range2pos(cqp_result[,1], cqp_result[,2])
-    rcqp::cqi_drop_subcorpus(paste0(corpus$name, ":RusecqpQuery"))
+    rcqp::cqi_drop_subcorpus(paste0(cqp_corpus$name, ":RusecqpQuery"))
     cqp_result
   })
   result <- unlist(result, recursive = F)
-  query_result <- list(match = result, corpus = corpus)
+  query_result <- list(match = result, corpus = cqp_corpus)
   class(query_result) <- append(class(query_result), "query_result")
   query_result
 }

@@ -5,6 +5,7 @@
 #' or rusecqp (\code{Sys.setenv(CORPUS_REGISTRY = path_to_reg)}).
 #'
 #' @examples \dontrun{list_corpora()}
+#'
 #' @export
 list_corpora <- function() {
   corpus_list <- rcqp::cqi_list_corpora()
@@ -19,6 +20,7 @@ list_corpora <- function() {
 #' @param corpus_name character of CWB corpus name (will be converted to uppercase).
 #' @return list with class attribute "rusecqp_corpus" containing  corpus information.
 #' @examples \dontrun{get_corpus("MY_CORPUS")}
+#'
 #' @export
 get_corpus <- function(corpus_name) {
   corpus_name <- toupper(corpus_name)
@@ -49,9 +51,9 @@ get_corpus <- function(corpus_name) {
 #' @examples \dontrun{subset_corpus, "text_year", c(2015, 2016)}
 #'
 #' @export
-subset_corpus <- function(corpus, sattr, sattr_values) {
-  sattr_string <- paste0(corpus$name, ".", sattr)
-  corpus_sattr <- sattr_regions(sattr, corpus)
+subset_corpus <- function(cqp_corpus, sattr, sattr_values) {
+  sattr_string <- paste0(cqp_corpus$name, ".", sattr)
+  corpus_sattr <- sattr_regions(sattr, cqp_corpus)
   if(!is.null(sattr_values)) {
     corpus_sattr <- corpus_sattr[CATEGORY %in% sattr_values]
   }
@@ -60,7 +62,7 @@ subset_corpus <- function(corpus, sattr, sattr_values) {
   })
   subcorpus <- list()
   class(subcorpus) <- append(class(subcorpus), "rusecqp_subcorpus")
-  subcorpus$name <- corpus$name
+  subcorpus$name <- cqp_corpus$name
   subcorpus$cpos <- positions
   subcorpus$token_count <- sum(vapply(positions, function(p) {
     p[2] - p[1] + 1
@@ -81,10 +83,10 @@ subset_corpus <- function(corpus, sattr, sattr_values) {
 #' @examples \dontrun{frequency_list, pattr = "lemma", sattr = "text_year", sattr_values = c(2015, 2016)}
 #'
 #' @export
-frequency_list <- function(corpus, pattr = "word") {
-  pattr_string <- paste0(corpus$name, ".", pattr)
-  positions <- unlist(lapply(corpus$cpos, function(p) seq(p[1], p[2])))
-  token_fd <- tk_pos2freq(positions, corpus, pattr)
+frequency_list <- function(cqp_corpus, pattr = "word") {
+  pattr_string <- paste0(cqp_corpus$name, ".", pattr)
+  positions <- unlist(lapply(cqp_corpus$cpos, function(p) seq(p[1], p[2])))
+  token_fd <- tk_pos2freq(positions, cqp_corpus, pattr)
   token_fd[]
 }
 
@@ -106,15 +108,15 @@ frequency_list <- function(corpus, pattr = "word") {
 #' @examples \dontrun{trigrams <- ngrams(my_corpus, 3, min_count = 10)}
 #'
 #' @export
-ngrams <- function(corpus, ngram_length, pattr = "word", ignore_punct = T) {
-  pattr_string <- paste0(corpus$name, ".", pattr)
+ngrams <- function(cqp_corpus, ngram_length, pattr = "word", ignore_punct = T) {
+  pattr_string <- paste0(cqp_corpus$name, ".", pattr)
   dt_columns <- paste0("V", 1:ngram_length)
   if(ignore_punct) {
     punct_tokens <- c(".", "!", "?", ",", ";", ":", '"', "(", ")", "-")
     punct_ids <- rcqp::cqi_str2id(pattr_string, punct_tokens)
   }
   ng <- rbindlist(
-    lapply(corpus$cpos, function(p) {
+    lapply(cqp_corpus$cpos, function(p) {
       ids <- data.table(rcqp::cqi_cpos2id(pattr_string, p[1]:p[2]))
       if(ignore_punct) ids <- ids[!(V1 %in% punct_ids)]
       ids[, (dt_columns) := shift(V1, n = 1:ngram_length, type = "lead")]
