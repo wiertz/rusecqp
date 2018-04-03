@@ -4,14 +4,14 @@
 \alias{subset_corpus}
 \title{Get corpus token positions restricted by structural attribute values}
 \usage{
-subset_corpus(corpus, sattr, sattr_values)
+subset_corpus(cqp_corpus, sattr, sattr_values)
 }
 \arguments{
-\item{corpus}{corpus created with \code{get_corpus}.}
-
 \item{sattr}{character specifying s-attribute.}
 
 \item{sattr_values}{vector of s-attribute values.}
+
+\item{corpus}{corpus created with \code{get_corpus}.}
 }
 \value{
 list of class rusecqp_subcorpus with info on corpus name, subset

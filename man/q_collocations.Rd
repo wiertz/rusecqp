@@ -4,7 +4,7 @@
 \alias{q_collocations}
 \title{Collocations to query match}
 \usage{
-q_collocations(query_result, context, pattr = "word", include_match = F)
+q_collocations(query_result, context, pattr = "word", exclude_match = T)
 }
 \arguments{
 \item{query_result}{list of class query result returned from

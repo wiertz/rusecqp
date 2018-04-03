@@ -17,4 +17,5 @@ list with class attribute "rusecqp_corpus" containing  corpus information.
 }
 \examples{
 \dontrun{get_corpus("MY_CORPUS")}
+
 }

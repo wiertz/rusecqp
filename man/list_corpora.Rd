@@ -13,4 +13,5 @@ or rusecqp (\code{Sys.setenv(CORPUS_REGISTRY = path_to_reg)}).
 }
 \examples{
 \dontrun{list_corpora()}
+
 }

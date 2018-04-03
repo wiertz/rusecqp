@@ -4,13 +4,13 @@
 \alias{frequency_list}
 \title{Calculate token frequency list}
 \usage{
-frequency_list(corpus, pattr = "word")
+frequency_list(cqp_corpus, pattr = "word")
 }
 \arguments{
+\item{pattr}{string specifying positional attribute (e.g. word or lemma).}
+
 \item{corpus}{corpus created with \code{get_corpus} or corpus subset created
 with \code{subset_corpus}.}
-
-\item{pattr}{string specifying positional attribute (e.g. word or lemma).}
 }
 \value{
 data.table with tokens, absolute, and relative frequencies.

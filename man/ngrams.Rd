@@ -4,17 +4,17 @@
 \alias{ngrams}
 \title{Calcualte ngrams}
 \usage{
-ngrams(corpus, ngram_length, pattr = "word", ignore_punct = T)
+ngrams(cqp_corpus, ngram_length, pattr = "word", ignore_punct = T)
 }
 \arguments{
-\item{corpus}{corpus created with \code{get_corpus}.}
-
 \item{ngram_length}{numeric. Length of ngrams.}
 
 \item{pattr}{character. Positional attribute to use for ngram calculation.}
 
 \item{ignore_punct}{logical. If TRUE, punctuation is ignored in ngram
 calculation.}
+
+\item{corpus}{corpus created with \code{get_corpus}.}
 }
 \value{
 data.table with ngrams and frequencies.

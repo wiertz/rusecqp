@@ -4,16 +4,16 @@
 \alias{query_corpus}
 \title{Query corpus}
 \usage{
-query_corpus(corpus, cqp_query, sattr = NULL, sattr_values = NULL)
+query_corpus(cqp_corpus, cqp_query, sattr = NULL, sattr_values = NULL)
 }
 \arguments{
-\item{corpus}{corpus created with \code{get_corpus}.}
-
 \item{cqp_query}{character with cqp query string.}
 
 \item{sattr}{character specifying s-attribute.}
 
 \item{sattr_values}{vector of s-attribute values.}
+
+\item{corpus}{corpus created with \code{get_corpus}.}
 }
 \value{
 list of class query_result with match and matchend position values.
