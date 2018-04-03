@@ -22,7 +22,7 @@ query_corpus <- function(cqp_corpus, cqp_query, sattr = NULL, sattr_values = NUL
                                "'")
   }
   result <- lapply(cqp_query, function(q) {
-    print(paste0("performing query ", q, "on corpus ", cqp_corpus$name))
+    print(paste0("performing query ", q, " on corpus ", cqp_corpus$name))
     rcqp::cqi_query(cqp_corpus$name, "RusecqpQuery", q)
     cqp_result <- rcqp::cqi_dump_subcorpus(paste0(cqp_corpus$name, ":RusecqpQuery"))
     cqp_result <- tk_range2pos(cqp_result[,1], cqp_result[,2])
@@ -96,7 +96,7 @@ q_distribution <- function(query_result, sattr) {
 #' longer than one token, the context is build around the entire length of the
 #' query match. E.g. if \code{context = 3}, three tokens before the first token
 #' of the match and three tokens after the last token of the match are taken
-#' into account. Note that the tokens of match itself are contained in the result.
+#' into account.
 #'
 #' @param query_result list of class query result returned from
 #'   \code{query_corpus}.
@@ -133,7 +133,10 @@ q_collocations <- function(query_result, context, pattr = "word", exclude_match 
     stop("Invalid context. Provide numeric window size or character of structural attribute.")
   }
   if(exclude_match) positions <- positions[!(positions %in% match_positions)]
-  collocations <- tk_pos2freq(positions, query_result$corpus, pattr)
+  collocations <- tk_pos2freq(positions, query_result$corpus, pattr = pattr)
   collocations[, R := N / length(positions)]
-  collocations[]
+  corpus_flist <- frequency_list(query_result$corpus, pattr = pattr)
+  collocation_stats <- keywords(collocations, corpus_flist, A_is_subset = F, min_A = 1, min_B = 1)
+  names(collocation_stats) <- c("TOKEN", "N.COLLOC", "N.CORPUS", "R.COLLOC", "R.CORPUS", "LOGLIK", "LOGRAT")
+  collocation_stats[order(-LOGLIK)]
 }
