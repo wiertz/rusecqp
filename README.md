@@ -1,4 +1,4 @@
-# rusecqp: An R package for corpus linguistic analysis on Corpus Workbench corpora
+# rusecqp: An R package for corpus linguistic analysis with Corpus Workbench corpora
 
 ## Description
 The Open Source Project [IMS Corpus Workbench](http://cwb.sourceforge.net) (CWB, Evert & Hardie, 2011) provides a data model and corpus query processor (CQP) for linguistic analysis. The existing [rcqp-Package](https://cran.r-project.org/package=rcqp) (Desgraupes & Loiseau 2018) enables users to perform queries on Corpus Workbench corpora in R and access token level information, but does not provide high level functionality for corpus linguistic analysis. *rusecqp* builds on top of rcqp to provide functions such as frequency distribution, ngrams, or keyword and collocation analysis.
@@ -36,3 +36,6 @@ See the help of the respective functions for explanations of their usage. Curren
 ## References
 * Desgraupes, B. and S. Loiseau (2016): rcqp: Interface to the Corpus Query Protocol. – Available online at: https://cran.r-project.org/package=rcqp. – accessed online 22/1/2018
 * Evert, S., and A. Hardie 2011. Twenty-First Century Corpus Workbench: Updating a Query Architecture for the New Millennium. – Proceedings of the Corpus Linguistics 2011 Conference. – University of Birmingham, UK
+
+## Contact
+Thilo Wiertz, thilo.wiertz@geographie.uni-freiburg.de
