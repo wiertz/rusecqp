@@ -92,11 +92,14 @@ q_distribution <- function(query_result, sattr) {
 
 #' Collocations to query match
 #'
-#' \code{q_collocations} returns collocators of a query match. If query match is
-#' longer than one token, the context is build around the entire length of the
-#' query match. E.g. if \code{context = 3}, three tokens before the first token
-#' of the match and three tokens after the last token of the match are taken
-#' into account.
+#' \code{q_collocations} performs collocation analysis of a query match. If
+#' query match is longer than one token the context is build around the entire
+#' length of the query match. E.g. if \code{context = 3}, three tokens before
+#' the first token of the match and three tokens after the last token of the
+#' match are taken into account. In case two or more numeric collocation windows
+#' overlap, tokens are counted multiple times. However, if more than one match
+#' fall within a structural region, only unique structural regions are
+#' considered.
 #'
 #' @param query_result list of class query result returned from
 #'   \code{query_corpus}.
@@ -104,15 +107,15 @@ q_distribution <- function(query_result, sattr) {
 #'   query match. integer vector of length two: number of tokens to the left and
 #'   right. character: structural attribute (e.g. "s").
 #' @param pattr character specifying positional attribute (e.g. "word").
-#' @param include_match logical indicating wether the matched tokens themselves
-#'   should be considered in the analysis.
+#' @param exclude_match logical indicating whether the matched tokens themselves
+#'   should be excluded from the analysis.
 #' @return data.table of collocators and frequencies.
 #'
 #' @examples \dontrun{q_collocations(my_query_result, context = 3)}
 #'   \dontrun{q_collocations(my_query_result, context = c(2, 0))}
-#'   \dontrun{q_collocations(my_query_result, context = "s")}
+#'   \dontrun{q_collocations(my_query_result, context = "s", pattr = "lemma", exclude_match = F)}
 #'
-#'
+#' @export
 q_collocations <- function(query_result, context, pattr = "word", exclude_match = T) {
   match_positions <- unlist(query_result$match)
   match_positions_count <- length(match_positions)
@@ -124,11 +127,13 @@ q_collocations <- function(query_result, context, pattr = "word", exclude_match 
       (x[1] - left_context):(x[length(x)] + right_context)
       })
     )
+    is_subset <- F
   } else if(context %in% query_result$corpus$sattribs) {
     sattrib_string <- paste0(query_result$corpus$name, ".", context)
     left_boundaries <- rcqp::cqi_cpos2lbound(sattrib_string, match_positions)
     right_boundaries <- rcqp::cqi_cpos2rbound(sattrib_string, match_positions)
     positions <- unique(unlist(Map(seq, left_boundaries, right_boundaries)))
+    is_subset <- T
   } else {
     stop("Invalid context. Provide numeric window size or character of structural attribute.")
   }
@@ -136,7 +141,7 @@ q_collocations <- function(query_result, context, pattr = "word", exclude_match 
   collocations <- tk_pos2freq(positions, query_result$corpus, pattr = pattr)
   collocations[, R := N / length(positions)]
   corpus_flist <- frequency_list(query_result$corpus, pattr = pattr)
-  collocation_stats <- keywords(collocations, corpus_flist, A_is_subset = F, min_A = 1, min_B = 1)
+  collocation_stats <- keywords(collocations, corpus_flist, A_is_subset = is_subset, min_A = 1, min_B = 1)
   names(collocation_stats) <- c("TOKEN", "N.COLLOC", "N.CORPUS", "R.COLLOC", "R.CORPUS", "LOGLIK", "LOGRAT")
   collocation_stats[order(-LOGLIK)]
 }
