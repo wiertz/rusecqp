@@ -131,3 +131,33 @@ ngrams <- function(cqp_corpus, ngram_length, pattr = "word", ignore_punct = T) {
   )]
   ng[, (dt_columns) := NULL][order(-N)]
 }
+
+#' Calculate keywords
+#'
+#' \code{keywords} calculates keywords based on two frequency lists.
+#'
+#' @param freq_list_A data.table. Frequency list of tokens with columns "token", "N", "R"
+#' @param freq_list_B data.table. Frequency list of tokens with columns "token", "N", "R"
+#' @param A_is_subset logical. Set to TRUE if counts in freq_list_B contain counts
+#'   in freq_list_A. This is the case if the corpus or corpus subset from which
+#'   freq_list_A was computed is a subset of the corpus or corpus subset form which
+#'   freq_list_B was computed.
+#' @param min_A numeric. Minimum number of tokens in flist_A.
+#' @param min_B numeric. Minimum number of tokens in flilst_B.
+#'
+#' @return data.table with log likelihood and log ratio statistics.
+#' @examples \dontrun{keywords(my_flist_a, my_flist_b, A_is_subset = T)}
+#'
+keywords <- function(flist_A, flist_B, A_is_subset, min_A = 0, min_B = 0) {
+  total_A <- sum(flist_A$N)
+  total_B <- sum(flist_B$N)
+  keywords_dt <- merge(flist_A, flist_B, by = "TOKEN", suffixes = c(".A", ".B"))
+  for (column in names(keywords_dt)) {
+    keywords_dt[is.na(get(column)), (column) := 0]
+  }
+  keywords_dt <- keywords_dt[N.A >= min_A & N.B >= min_B]
+  keywords_dt[, LOGLIK := log_likelihood(N.A, total_A, N.B, total_B, A_is_subset)]
+  keywords_dt[, LOGRAT := log_ratio(rel_frequency_A = R.A, rel_frequency_B = R.B)]
+  setcolorder(keywords_dt, c("TOKEN", "N.A", "N.B", "R.A", "R.B", "LOGLIK", "LOGRAT"))
+  keywords_dt[order(-LOGLIK)]
+}
