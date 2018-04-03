@@ -18,5 +18,5 @@ Depends:
     data.table
 RoxygenNote: 6.0.1
 Suggests: testthat
-URL: http://github.com/retide/rusecqp
-BugReports: http://github.com/retide/rusecqp/issues
+URL: http://github.com/wiertz/rusecqp
+BugReports: http://github.com/wiertz/rusecqp/issues
