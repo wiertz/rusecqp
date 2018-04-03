@@ -113,7 +113,9 @@ q_distribution <- function(query_result, sattr) {
 #'   \dontrun{q_collocations(my_query_result, context = "s")}
 #'
 #'
-q_collocations <- function(query_result, context, pattr = "word") {
+q_collocations <- function(query_result, context, pattr = "word", exclude_match = T) {
+  match_positions <- unlist(query_result$match)
+  match_positions_count <- length(match_positions)
   if(is.numeric(context)) {
     left_context <- context[1]
     right_context <- ifelse(length(context) == 2, context[2], context[1])
@@ -124,13 +126,14 @@ q_collocations <- function(query_result, context, pattr = "word") {
     )
   } else if(context %in% query_result$corpus$sattribs) {
     sattrib_string <- paste0(query_result$corpus$name, ".", context)
-    match_positions <- unlist(query_result$match)
     left_boundaries <- rcqp::cqi_cpos2lbound(sattrib_string, match_positions)
     right_boundaries <- rcqp::cqi_cpos2rbound(sattrib_string, match_positions)
     positions <- unique(unlist(Map(seq, left_boundaries, right_boundaries)))
   } else {
-    stop("Invalid context. Provide numeric window size or s_attribute name.")
+    stop("Invalid context. Provide numeric window size or character of structural attribute.")
   }
+  if(exclude_match) positions <- positions[!(positions %in% match_positions)]
   collocations <- tk_pos2freq(positions, query_result$corpus, pattr)
-  collocations[, !"R"]
+  collocations[, R := N / length(positions)]
+  collocations[]
 }
