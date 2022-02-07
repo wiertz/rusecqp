@@ -149,6 +149,9 @@ ngrams <- function(cqp_corpus, ngram_length, pattr = "word", ignore_punct = T) {
 #' @examples \dontrun{keywords(my_flist_a, my_flist_b, A_is_subset = T)}
 #'
 keywords <- function(flist_A, flist_B, A_is_subset, min_A = 0, min_B = 0) {
+  if(!inherits(flist_A), "data.table") flist_A <- as.data.table(flist_A)
+  if(!inherits(flist_B), "data.table") flist_B <- as.data.table(flist_B)
+
   total_A <- sum(flist_A$N)
   total_B <- sum(flist_B$N)
   keywords_dt <- merge(flist_A, flist_B, by = "TOKEN", suffixes = c(".A", ".B"))
