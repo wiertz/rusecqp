@@ -143,12 +143,14 @@ ngrams <- function(cqp_corpus, ngram_length, pattr = "word", ignore_punct = T) {
 #'   freq_list_A was computed is a subset of the corpus or corpus subset form which
 #'   freq_list_B was computed.
 #' @param min_A numeric. Minimum number of tokens in flist_A.
-#' @param min_B numeric. Minimum number of tokens in flilst_B.
+#' @param min_B numeric. Minimum number of tokens in flist_B.
+#' @param token_column character. Name of column containing tokens.
+#' @param freq_column character. Name of column containing token frequencies.
 #'
 #' @return data.table with log likelihood and log ratio statistics.
 #' @examples \dontrun{keywords(my_flist_a, my_flist_b, A_is_subset = T)}
 #'
-keywords <- function(flist_A, flist_B, A_is_subset, min_A = 0, min_B = 0) {
+keywords <- function(flist_A, flist_B, A_is_subset, min_A = 0, min_B = 0, token_column = "TOKEN", freq_column = "N") {
   if(!inherits(flist_A), "data.table") flist_A <- as.data.table(flist_A)
   if(!inherits(flist_B), "data.table") flist_B <- as.data.table(flist_B)
 
